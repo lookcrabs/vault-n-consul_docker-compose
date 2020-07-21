@@ -1,0 +1,10 @@
+{
+    "bootstrap_expect": 3,
+    "retry_join": ["consul-server-1", "consul-server-2", "consul-server-3"],
+    "node_name": "consul-server-3",
+    "server": true,
+    "datacenter": "hashi-internal",
+    "data_dir": "/consul/data",
+    "log_level": "INFO",
+    "encrypt": "fcmwwwv/Nae5pq3QYsPV8PBg3qPJ1fVyc8XB9x9XxCE="
+}

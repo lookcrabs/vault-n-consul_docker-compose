@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  local-vault:
+    image: vault
+    container_name: local-vault
+    ports:
+      - "8200:8200"
+    volumes:
+      - type: bind
+        source: ./file
+        target: /vault/file
+      - type: bind
+        source: ./config
+        target: /vault/config
+      - type: bind
+        source: ./logs
+        target: /vault/logs
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/vault.json
+
+networks:
+  default:
+    external:
+      name: consul_hashi-internal

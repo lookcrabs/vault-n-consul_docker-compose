@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  consul-server-1: &consul-server
+    image: consul:latest
+    networks:
+      - hashi-internal
+    container_name: consul-server-1
+    volumes:
+      - type: bind
+        source: ./consul-server-1/config
+        target: /consul/config
+      - type: volume
+        source: consul-server-1
+        target: /consul/data
+    command: "agent -server -retry-join consul-server-3 -client 0.0.0.0"
+  consul-server-2:
+    image: consul:latest
+    networks:
+      - hashi-internal
+    container_name: consul-server-2
+    volumes:
+      - type: bind
+        source: ./consul-server-2/config
+        target: /consul/config
+      - type: volume
+        source: consul-server-2
+        target: /consul/data
+    command: "agent -server -retry-join consul-server-3 -client 0.0.0.0"
+  consul-server-3:
+    image: consul:latest
+    networks:
+      - hashi-internal
+    container_name: consul-server-3
+    volumes:
+      - type: bind
+        source: ./consul-server-3/config
+        target: /consul/config
+      - type: volume
+        source: consul-server-3
+        target: /consul/data
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+    command: "agent -server -bootstrap-expect 3 -ui -client 0.0.0.0"
+networks:
+  hashi-internal:
+volumes:
+  consul-server-1:
+  consul-server-2:
+  consul-server-3:
+configs:
+  consul_template:
+    file: ./config.json
+    template_driver: golang
